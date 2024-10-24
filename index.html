@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synonyms and Antonyms</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #logo {
+            width: 150px; /* Adjust the logo size as needed */
+            margin-bottom: 20px;
+        }
+        .word {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .word span {
+            color: blue; /* Change word color to blue */
+            font-weight: bold; /* Make word bold */
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .option {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 200px;
+            text-align: center;
+        }
+        .option:hover {
+            background-color: #0056b3;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .next {
+            margin-top: 30px;
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .next:hover {
+            background-color: #388e3c;
+        }
+        #more-lessons {
+            margin-top: 40px;
+            background-color: #f44336;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        #more-lessons:hover {
+            background-color: #c62828;
+        }
+    </style>
+</head>
+<body>
+
+<img id="logo" src="https://i.imgur.com/mwpTHJj.png" alt="Logo">
+<h1>Synonyms and Antonyms Exercise</h1>
+
+<!-- Synonyms Section -->
+<div id="synonyms-section">
+    <div class="word" id="synonym-word">Word: <span id="synonym"></span></div>
+    <div class="options" id="synonym-options"></div>
+    <div class="feedback" id="synonym-feedback"></div>
+</div>
+
+<!-- Antonyms Section -->
+<div id="antonyms-section" style="display: none;">
+    <div class="word" id="antonym-word">Word: <span id="antonym"></span></div>
+    <div class="options" id="antonym-options"></div>
+    <div class="feedback" id="antonym-feedback"></div>
+</div>
+
+<!-- Next Section Button -->
+<a href="#" class="next" id="next-button" style="display: none;">Next Exercise</a>
+
+<!-- More Lessons Button -->
+<a href="https://sites.google.com/view/grades-2/home" id="more-lessons">More Lessons</a>
+
+<script>
+    const synonyms = {
+        "happy": ["joyful", "sad", "angry", "excited"],
+        "big": ["large", "small", "tiny", "huge"],
+        "fast": ["quick", "slow", "steady", "rapid"],
+        "smart": ["intelligent", "dumb", "slow", "wise"],
+        "strong": ["powerful", "weak", "fragile", "mighty"],
+        "bright": ["shiny", "dim", "dark", "luminous"],
+        "easy": ["simple", "hard", "difficult", "smooth"],
+        "rich": ["wealthy", "poor", "affluent", "prosperous"],
+        "kind": ["nice", "mean", "rude", "gentle"],
+        "brave": ["courageous", "fearful", "timid", "bold"],
+        "quiet": ["silent", "loud", "noisy", "calm"],
+        "calm": ["peaceful", "agitated", "nervous", "serene"],
+        "clean": ["neat", "dirty", "messy", "tidy"],
+        "hard": ["firm", "soft", "easy", "solid"],
+        "new": ["recent", "old", "ancient", "modern"],
+        "hot": ["warm", "cold", "cool", "boiling"],
+        "hardworking": ["diligent", "lazy", "industrious", "unproductive"],
+        "funny": ["humorous", "serious", "boring", "comical"],
+        "friendly": ["kind", "hostile", "mean", "cordial"],
+        "dangerous": ["hazardous", "safe", "secure", "risky"]
+    };
+
+    const antonyms = {
+        "happy": ["sad", "joyful", "angry", "excited"],
+        "big": ["small", "huge", "tiny", "large"],
+        "fast": ["slow", "quick", "steady", "rapid"],
+        "smart": ["dumb", "intelligent", "slow", "wise"],
+        "strong": ["weak", "powerful", "fragile", "mighty"],
+        "bright": ["dim", "dark", "shiny", "luminous"],
+        "easy": ["hard", "difficult", "smooth", "simple"],
+        "rich": ["poor", "wealthy", "affluent", "prosperous"],
+        "kind": ["mean", "nice", "rude", "gentle"],
+        "brave": ["fearful", "timid", "courageous", "bold"],
+        "quiet": ["loud", "noisy", "silent", "calm"],
+        "calm": ["agitated", "nervous", "peaceful", "serene"],
+        "clean": ["dirty", "messy", "neat", "tidy"],
+        "hard": ["soft", "easy", "firm", "solid"],
+        "new": ["old", "ancient", "recent", "modern"],
+        "hot": ["cold", "warm", "cool", "boiling"],
+        "hardworking": ["lazy", "unproductive", "diligent", "industrious"],
+        "funny": ["serious", "boring", "humorous", "comical"],
+        "friendly": ["hostile", "mean", "kind", "cordial"],
+        "dangerous": ["safe", "secure", "hazardous", "risky"]
+    };
+
+    let currentExercise = 0;
+    const synonymKeys = Object.keys(synonyms);
+    const antonymKeys = Object.keys(antonyms);
+    const nextButton = document.getElementById('next-button');
+
+    function loadSynonymExercise() {
+        const word = synonymKeys[currentExercise];
+        const options = [synonyms[word][0], ...synonyms[word].slice(1).sort(() => Math.random() - 0.5)];
+        document.getElementById('synonym').textContent = word;
+        document.getElementById('synonym-options').innerHTML = options.map(option => `<div class="option">${option}</div>`).join('');
+        document.getElementById('synonym-feedback').textContent = '';
+        document.getElementById('synonyms-section').style.display = 'block';
+        document.getElementById('antonyms-section').style.display = 'none';
+
+        const correctAnswer = synonyms[word][0];
+        document.querySelectorAll('#synonym-options .option').forEach(option => {
+            option.addEventListener('click', () => {
+                if (option.textContent === correctAnswer) {
+                    document.getElementById('synonym-feedback').textContent = "Well done!";
+                    nextButton.style.display = 'block';
+                } else {
+                    document.getElementById('synonym-feedback').textContent = "Try again!";
+                }
+            });
+        });
+    }
+
+    function loadAntonymExercise() {
+        const word = antonymKeys[currentExercise];
+        const options = [antonyms[word][0], ...antonyms[word].slice(1).sort(() => Math.random() - 0.5)];
+        document.getElementById('antonym').textContent = word;
+        document.getElementById('antonym-options').innerHTML = options.map(option => `<div class="option">${option}</div>`).join('');
+        document.getElementById('antonym-feedback').textContent = '';
+        document.getElementById('antonyms-section').style.display = 'block';
+        document.getElementById('synonyms-section').style.display = 'none';
+
+        const correctAnswer = antonyms[word][0];
+        document.querySelectorAll('#antonym-options .option').forEach(option => {
+            option.addEventListener('click', () => {
+                if (option.textContent === correctAnswer) {
+                    document.getElementById('antonym-feedback').textContent = "Well done!";
+                    nextButton.style.display = 'block';
+                } else {
+                    document.getElementById('antonym-feedback').textContent = "Try again!";
+                }
+            });
+        });
+    }
+
+    nextButton.addEventListener('click', () => {
+        currentExercise++;
+        if (currentExercise < synonymKeys.length) {
+            loadSynonymExercise();
+            nextButton.style.display = 'none';
+        } else if (currentExercise < synonymKeys.length + antonymKeys.length) {
+            loadAntonymExercise();
+            nextButton.style.display = 'none';
+        } else {
+            alert('You have completed all exercises!');
+        }
+    });
+
+    loadSynonymExercise();
+</script>
+
+</body>
+</html>
